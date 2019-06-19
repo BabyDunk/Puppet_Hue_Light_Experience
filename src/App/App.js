@@ -20,6 +20,7 @@ class App extends Component {
 			colorInterId: 0,
 			effect: "none",
 			pulseInterId: 0,
+			pulseCycle: true,
 			index: -1,
 			colorMap: {
 				"red": 65495,
@@ -292,12 +293,20 @@ class App extends Component {
 	pulseCycle() {
 		
 		this.setState({
-			pulseInterId: setTimeout(this.pulseCycle, 1000)
+			pulseInterId: setTimeout(this.pulseCycle, 1000),
+			pulseCycle: !this.state.pulseCycle
 		}, () => {
 			
-			this.loadLighting({
-				"alert": "select"
-			})
+			if(this.state.pulseCycle){
+				this.loadLighting({
+					"alert": "select"
+				});
+			}else{
+				this.loadLighting({
+					"alert": "select"
+				});
+			}
+			
 		})
 	}
 	
