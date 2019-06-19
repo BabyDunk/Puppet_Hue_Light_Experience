@@ -102,11 +102,15 @@ class App extends Component {
 	
 	// Loads all states
 	loadLighting(stateObject) {
-		if(this.state.lightCount >= 1 ){
+		if(this.state.lightCount === 1 ){
 			put('/lights/1/state', stateObject)
 				.then(this.setState(stateObject));  // store the light state
-		}
-		if(this.state.lightCount === 2 ){
+		} else if(this.state.lightCount === 2 ){
+			put('/lights/2/state', stateObject)
+				.then(this.setState(stateObject));  // store the light state
+		}else{
+			put('/lights/1/state', stateObject)
+				.then(this.setState(stateObject));  // store the light state
 			put('/lights/2/state', stateObject)
 				.then(this.setState(stateObject));  // store the light state
 		}
