@@ -12,9 +12,11 @@ class App extends Component {
 		// store any variables here
 		this.state = {
 			on: true,
-			color: 0,
+      color: 0,
+      colorName: 'black',
 			brightness: 254,
-			randInterId: 0,
+      randInterId: 0,
+      effect: "none",
 			colorMap: {
 				"red": 65495,
 				"orange": 3439,
@@ -30,13 +32,10 @@ class App extends Component {
 			}
 		};
 		
-		
-		
-		
 		this.turnLightOff = this.turnLightOff.bind(this);
 		this.randomRotation = this.randomRotation.bind(this);
-		this.randomColor = this.randomColor.bind(this);
-		
+    this.randomColor = this.randomColor.bind(this);
+    this.colorLoop = this.colorLoop.bind(this);
 	}
 	
 	turnLightOff() {
@@ -44,21 +43,23 @@ class App extends Component {
 			.then(this.setState({on: !this.state.on}));  // store the light state
 	}
 	
-	setColor(color) {
+	setColor(color, pulse='none') {
 		
 		let hue;
 		if (color in this.state.colorMap) {
-			hue = this.state.colorMap[color];
+      hue = this.state.colorMap[color];
+      this.setState({
+        colorName: color
+      })
 		}
-		
-		this.loadLighting({hue: hue});
+		console.log(this.state.colorName)
+		this.loadLighting({hue: hue, "alert": pulse});
 		
 		this.updateStatus(color)
 	}
 	
 	updateStatus(color){
 		// Display active color
-		document.getElementById("currentState").style.backgroundColor = color;
 		
 		let fontColor = '#ffffff';
 		if(color === 'white'){
@@ -84,7 +85,6 @@ class App extends Component {
 			.then(this.setState(stateObject));  // store the light state
 	}
 
-	
 	renderStateButton() {
 		
 		if (this.state.on) {
@@ -98,7 +98,7 @@ class App extends Component {
 				brightness = "Bright"
 			}
 			
-			return(<Button class="ui button" id="currentState" color={"blue"}> {brightness}</Button>)
+			return(<Button class="ui button" id="currentState" color={this.state.colorName}> {brightness}</Button>)
 		} else {
 			// off button
 			return(<Button class="ui button" id="currentState" color={"black"}>OFF</Button>)
@@ -109,19 +109,31 @@ class App extends Component {
 		let colorKeys = Object.entries(this.state.colorMap);
 		
 		let randIndex = Math.floor(Math.random()*colorKeys.length);
-		this.setColor(colorKeys[randIndex][0]);
-
+    this.setColor(colorKeys[randIndex][0]);
+    
     this.setState({
       interId: setTimeout(this.randomColor, 3000)
     });
-	};
+  };
+  
+  colorLoop(){
+    let effectState  = 'none';
+    if(this.state.effect === 'none'){
+      effectState = 'colorloop';
+    }else if (this.state.effect === 'colorloop'){
+      effectState = 'none';
+    }
+
+    this.loadLighting({effect: effectState})
+      this.setState({
+        effect: effectState
+      })
+  }
 	
 	randomRotation(){
 		
 		if(this.state.on){
-			console.log(this.state.randInterId)
 			if(this.state.randInterId > 0){
-				
 				clearInterval(this.state.interId);
 				
 				this.setState({
@@ -143,7 +155,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className='button_container'>
-				<Button class="ui button" color={"red"} onClick={() => this.setColor("red")}>Turn Red</Button>
+				<Button class="ui button" color={"red"} onClick={() => this.setColor("red", "select")}>Turn Red</Button>
 				<Button class="ui button" color={"orange"} onClick={() => this.setColor("orange")}>Turn Orange</Button>
 				<Button class="ui button" color={"yellow"} onClick={() => this.setColor("yellow")}>Turn Yellow</Button>
 				<Button class="ui button" color={"green"} onClick={() => this.setColor("green")}>Turn Green</Button>
@@ -169,6 +181,9 @@ class App extends Component {
 				</Button>
 				<Button className='button' onClick={this.randomRotation}>
 					Toggle Random
+				</Button>
+        <Button className='button' onClick={this.colorLoop}>
+					Toggle Color Scale
 				</Button>
 				{this.renderStateButton()}
 
