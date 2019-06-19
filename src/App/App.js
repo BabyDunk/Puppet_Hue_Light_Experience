@@ -117,7 +117,7 @@ class App extends Component {
 	randomRotation(){
 		
 		if(this.state.on){
-			console.log(this.state.randInterId)
+			console.log(this.state.randInterId);
 			if(this.state.randInterId > 0){
 				
 				clearTimeout();
