@@ -19,4 +19,18 @@
 }
 .brightness-slider span{
   display:block;
+  margin-bottom:14px;
+}
+
+.mood-settings{
+  display:block;
+  padding:30px;
+  margin:30px;
+}
+
+.mood-settings span{
+  font-size:1.4em;
+  font-weight:600;
+  display:block;
+  margin-bottom:14px;
 }
