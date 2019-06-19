@@ -10,3 +10,13 @@
   height: 40px;
   width: 200px;
 }
+
+.brightness-slider{
+  font-size:1.4em;
+  font-weight:600;
+  padding:70px;
+  margin:70px;
+}
+.brightness-slider span{
+  display:block;
+}
