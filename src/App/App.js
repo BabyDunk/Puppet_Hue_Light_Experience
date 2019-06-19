@@ -110,8 +110,10 @@ class App extends Component {
 		
 		let randIndex = Math.floor(Math.random()*colorKeys.length);
 		this.setColor(colorKeys[randIndex][0]);
-		console.log(colorKeys[randIndex]);
-		setTimeout(this.randomColor, 3000);
+
+    this.setState({
+      interId: setTimeout(this.randomColor, 3000)
+    });
 	};
 	
 	randomRotation(){
@@ -120,12 +122,14 @@ class App extends Component {
 			console.log(this.state.randInterId)
 			if(this.state.randInterId > 0){
 				
-				clearTimeout();
+				clearInterval(this.state.interId);
 				
 				this.setState({
 					randInterId: 0
-				})
+        })
+        
 			}else {
+
 				let interId = setTimeout(this.randomColor, 3000);
 				
 				this.setState({
