@@ -11,26 +11,25 @@
   width: 200px;
 }
 
-.brightness-slider{
+.font-style{
   font-size:1.4em;
   font-weight:600;
+}
+
+.brightness-slider{
+
   padding:70px;
   margin:70px;
 }
-.brightness-slider span{
+span{
   display:block;
   margin-bottom:14px;
 }
 
-.mood-settings{
+.section-card{
   display:block;
   padding:30px;
   margin:30px;
 }
 
-.mood-settings span{
-  font-size:1.4em;
-  font-weight:600;
-  display:block;
-  margin-bottom:14px;
-}
+
