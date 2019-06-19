@@ -17,7 +17,7 @@ class App extends Component {
       brightness: 254,
       randInterId: 0,
       effect: "none",
-      index: 0,
+      index: -1,
       colorMap: {
         "red": 65495,
         "orange": 3439,
@@ -39,6 +39,7 @@ class App extends Component {
     this.randomRotation = this.randomRotation.bind(this);
     this.colorRotation = this.colorRotation.bind(this);
     this.colorLoop = this.colorLoop.bind(this);
+    this.rotateColor = this.rotateColor.bind(this)
   }
 
   turnLightOff() {
@@ -46,6 +47,7 @@ class App extends Component {
       .then(this.setState({ on: !this.state.on }));  // store the light state
   }
 
+  // Set color
   setColor(color, pulse = 'none') {
 
     let hue;
@@ -61,8 +63,8 @@ class App extends Component {
     this.updateStatus(color)
   }
 
+  // fixes font color when color white is being displayed
   updateStatus(color) {
-    // Display active color
 
     let fontColor = '#ffffff';
     if (color === 'white') {
@@ -72,6 +74,7 @@ class App extends Component {
     document.getElementById('currentState').style.color = fontColor;
   }
 
+  // Sets brightness setting
   setBrightness(brightEvent) {
 
     if (this.state.brightness >= 0 && this.state.brightness <= 254) {
@@ -81,6 +84,7 @@ class App extends Component {
     this.loadLighting({ bri: parseInt(brightEvent) });
   }
 
+  // Loads all states
   loadLighting(stateObject) {
     put('/lights/1/state', stateObject)
       .then(this.setState(stateObject));  // store the light state
@@ -88,6 +92,7 @@ class App extends Component {
       .then(this.setState(stateObject));  // store the light state
   }
 
+  // displays active color
   renderStateButton() {
 
     if (this.state.on) {
@@ -101,15 +106,15 @@ class App extends Component {
         brightness = "Bright"
       }
 
-      return (<Button class="ui button" id="currentState" color={this.state.colorName}> {brightness}</Button>)
+      return (<Button className="ui button" id="currentState" color={this.state.colorName}> {brightness}</Button>)
     } else {
       // off button
-      return (<Button class="ui button" id="currentState" color={"black"}>OFF</Button>)
+      return (<Button className="ui button" id="currentState" color={"black"}>OFF</Button>)
     }
   }
 
+  // Rotate collor sequence
   colorRotation(argArr = []) {
-
 
     let colorKeys = ''
     if (argArr.length === 0) {
@@ -130,9 +135,8 @@ class App extends Component {
         index: this.state.index + 1
       }, () => {
 
-        colorKeys = argArr[this.state.index][0];
 
-        this.setColor(colorKeys[argArr[this.state.index][0]]);
+        this.setColor(argArr[this.state.index][0]);
 
         this.setState({
           interId: setTimeout(this.colorRotation, argArr[this.state.index][1])
@@ -143,7 +147,7 @@ class App extends Component {
 
   };
 
-
+  // toggle random color sequence
   randomRotation() {
 
     if (this.state.on) {
@@ -163,10 +167,9 @@ class App extends Component {
         })
       }
     }
-
   }
 
-  /*rotateColor(colorArr) {
+  rotateColor(colorArr) {
 
     if (this.state.on) {
       if (this.state.randInterId > 0) {
@@ -177,14 +180,15 @@ class App extends Component {
         })
       }
 
-      let interId = setTimeout(this.randomColor, colorArr[0][1], colorArr);
+      let interId = setTimeout(this.colorRotation, 100, colorArr);
 
       this.setState({
         randInterId: interId
       })
     }
-  }*/
+  }
 
+  // Send mood settings to rotateColor
   moodLighting(mood) {
     let moodSetting = [];
     switch (mood) {
@@ -198,14 +202,14 @@ class App extends Component {
 
       case 'excited':
         moodSetting = [
-          ['oange', 6000],
+          ['orange', 6000],
           ['yellow', 3000],
           ['red', 5000],
         ]
         break;
       case 'relaxed':
         moodSetting = [
-          ['oange', 6000],
+          ['orange', 6000],
           ['yellow', 3000],
           ['red', 5000],
         ]
@@ -213,18 +217,23 @@ class App extends Component {
 
       case 'moody':
         moodSetting = [
-          ['oange', 6000],
+          ['orange', 6000],
           ['yellow', 3000],
           ['red', 5000],
         ]
         break;
       default:
+        moodSetting = [
+          ['red', 6000],
+          ['purple', 3000],
+          ['orange', 5000],
+        ]
         break;
     }
-    console.log(moodSetting)
-
+    this.rotateColor(moodSetting)
   }
 
+  // Loop throught the entire color spec
   colorLoop() {
     let effectState = 'none';
     if (this.state.effect === 'none') {
@@ -242,20 +251,20 @@ class App extends Component {
   render() {
     return (
       <div className='button_container'>
-        <Button class="ui button" color={"red"} onClick={() => this.setColor("red", "select")}>Turn Red</Button>
-        <Button class="ui button" color={"orange"} onClick={() => this.setColor("orange")}>Turn Orange</Button>
-        <Button class="ui button" color={"yellow"} onClick={() => this.setColor("yellow")}>Turn Yellow</Button>
-        <Button class="ui button" color={"green"} onClick={() => this.setColor("green")}>Turn Green</Button>
-        <Button class="ui button" color={"olive"} onClick={() => this.setColor("olive")}>Turn Olive</Button>
-        <Button class="ui button" color={"teal"} onClick={() => this.setColor("teal")}>Turn Olive</Button>
-        <Button class="ui button" color={"blue"} onClick={() => this.setColor("blue")}>Turn Blue</Button>
-        <Button class="ui button" color={"violet"} onClick={() => this.setColor("violet")}>Turn Violet</Button>
-        <Button class="ui button" color={"purple"} onClick={() => this.setColor("purple")}>Turn Purple</Button>
-        <Button class="ui button" color={"pink"} onClick={() => this.setColor("pink")}>Turn Pink</Button>
-        <Button class="ui button" color={"white"} onClick={() => this.setColor("white")}>Turn White</Button>
+        <Button className="ui button" color={"red"} onClick={() => this.setColor("red", "select")}>Turn Red</Button>
+        <Button className="ui button" color={"orange"} onClick={() => this.setColor("orange")}>Turn Orange</Button>
+        <Button className="ui button" color={"yellow"} onClick={() => this.setColor("yellow")}>Turn Yellow</Button>
+        <Button className="ui button" color={"green"} onClick={() => this.setColor("green")}>Turn Green</Button>
+        <Button className="ui button" color={"olive"} onClick={() => this.setColor("olive")}>Turn Olive</Button>
+        <Button className="ui button" color={"teal"} onClick={() => this.setColor("teal")}>Turn Olive</Button>
+        <Button className="ui button" color={"blue"} onClick={() => this.setColor("blue")}>Turn Blue</Button>
+        <Button className="ui button" color={"violet"} onClick={() => this.setColor("violet")}>Turn Violet</Button>
+        <Button className="ui button" color={"purple"} onClick={() => this.setColor("purple")}>Turn Purple</Button>
+        <Button className="ui button" color={"pink"} onClick={() => this.setColor("pink")}>Turn Pink</Button>
+        <Button className="ui button" color={"white"} onClick={() => this.setColor("white")}>Turn White</Button>
 
         <div className="brightness-slider">
-          <span>Brighten Up Your Mood</span>
+          <span className="title">Brighten Up Your Mood</span>
           <label>Min
             <input type="range" min="0" max="254" value={this.state.brightness} onChange={(e) => {
               this.setBrightness(e.target.value)
@@ -272,10 +281,15 @@ class App extends Component {
         <Button className='button' onClick={this.colorLoop}>
           Toggle Color Scale
         </Button>
-        <div className='mood-settings'>
-          <Button class="ui button" color={"teal"} onClick={() => this.moodLighting("relaxed")}>Relaxed</Button>
-        </div>
         {this.renderStateButton()}
+        <div className='mood-settings'>
+          <span className="title">Choose Your Mood</span>
+          <Button className="ui button" color={"teal"} onClick={() => this.moodLighting("relaxed")}>Relaxed</Button>
+          <Button className="ui button" color={"purple"} onClick={() => this.moodLighting("chilled")}>Chilled</Button>
+          <Button className="ui button" color={"orange"} onClick={() => this.moodLighting("excited")}>Excited</Button>
+          <Button className="ui button" color={"pink"} onClick={() => this.moodLighting("moody")}>Moody</Button>
+        </div>
+      
 
         <p>{this.state.username}</p>
       </div>
