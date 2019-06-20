@@ -1,3 +1,7 @@
+root{
+  background: linear-gradient(145deg, black, blue)
+}
+
 .button_container {
   margin-top: 200px;
   text-align: center;
@@ -18,8 +22,8 @@
 
 .brightness-slider{
 
-  padding:70px;
-  margin:70px;
+  padding:35px;
+  margin:35px;
 }
 span{
   display:block;

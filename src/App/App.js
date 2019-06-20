@@ -87,7 +87,7 @@ class App extends Component {
 			fontColor = '#555555'
 		}
 		
-		document.getElementById('currentState').style.color = fontColor;
+		document.getElementById('button-currentState').style.color = fontColor;
 	}
 	
 	// Sets brightness setting
@@ -98,6 +98,15 @@ class App extends Component {
 		}
 		
 		this.loadLighting({bri: parseInt(brightEvent)});
+	}
+
+	setColorScale(colorScale) {
+		
+		if (this.state.color >= 0 && this.state.color <= 65495) {
+			this.setState({color: parseInt(colorScale)})
+		}
+		
+		this.loadLighting({hue: parseInt(colorScale)});
 	}
 	
 	// Loads all states
@@ -129,10 +138,10 @@ class App extends Component {
 				brightness = "Bright"
 			}
 			
-			return (<Button className="ui button" id="currentState" color={this.state.colorName}> {brightness}</Button>)
+			return (<Button class="ui button" id="button-currentState" color={this.state.colorName}> {brightness}</Button>)
 		} else {
 			// off button
-			return (<Button className="ui button" id="currentState" color={"black"}>OFF</Button>)
+			return (<Button class="ui button" id="button-currentState" color={"black"}>OFF</Button>)
 		}
 	}
 	
@@ -351,72 +360,82 @@ class App extends Component {
 	
 	render() {
 		return (
-			<div className='button_container'>
-				<Button className="ui button" color={"red"} onClick={() => this.setColor("red", "select")}>Turn
+			<div class='button_container'>
+				<Button class="ui button" id="button-red" color={"red"} onClick={() => this.setColor("red", "select")}>Turn
 					Red</Button>
-				<Button className="ui button" color={"orange"} onClick={() => this.setColor("orange")}>Turn
+				<Button class="ui button" id="button-orange" color={"orange"} onClick={() => this.setColor("orange")}>Turn
 					Orange</Button>
-				<Button className="ui button" color={"yellow"} onClick={() => this.setColor("yellow")}>Turn
+				<Button class="ui button" id="button-yellow" color={"yellow"} onClick={() => this.setColor("yellow")}>Turn
 					Yellow</Button>
-				<Button className="ui button" color={"green"} onClick={() => this.setColor("green")}>Turn Green</Button>
-				<Button className="ui button" color={"olive"} onClick={() => this.setColor("olive")}>Turn Olive</Button>
-				<Button className="ui button" color={"teal"} onClick={() => this.setColor("teal")}>Turn Olive</Button>
-				<Button className="ui button" color={"blue"} onClick={() => this.setColor("blue")}>Turn Blue</Button>
-				<Button className="ui button" color={"violet"} onClick={() => this.setColor("violet")}>Turn
+				<Button class="ui button" id="button-green" color={"green"} onClick={() => this.setColor("green")}>Turn Green</Button>
+				<Button class="ui button" id="button-olive" color={"olive"} onClick={() => this.setColor("olive")}>Turn Olive</Button>
+				<Button class="ui button" id="button-teal"  color={"teal"} onClick={() => this.setColor("teal")}>Turn Olive</Button>
+				<Button class="ui blue button" id="button-blue"  color={"blue"} onClick={() => this.setColor("blue")}>Turn Blue</Button>
+				<Button class="ui button" id="button-violet"  color={"violet"} onClick={() => this.setColor("violet")}>Turn
 					Violet</Button>
-				<Button className="ui button" color={"purple"} onClick={() => this.setColor("purple")}>Turn
+				<Button class="ui button" id="button-purple" color={"purple"} onClick={() => this.setColor("purple")}>Turn
 					Purple</Button>
-				<Button className="ui button" color={"pink"} onClick={() => this.setColor("pink")}>Turn Pink</Button>
-				<Button className="ui button" color={"white"} onClick={() => this.setColor("white")}>Turn White</Button>
+				<Button class="ui button" id="button-pink" color={"pink"} onClick={() => this.setColor("pink")}>Turn Pink</Button>
+				<Button class="ui button" id="button-white" color={"white"} onClick={() => this.setColor("white")}>Turn White</Button>
 				
-				<div className="brightness-slider font-style">
-					<span className="title">Brighten Up Your Mood</span>
+				<div class="brightness-slider font-style">
+					<span class="title">Color Cycle</span>
 					<label>Min
-						<input type="range" min="0" max="254" value={this.state.brightness} onChange={(e) => {
+						<input id="slider-color-cycle" type="range" min="0" max="65495" value={this.state.color} onChange={(e) => {
+							this.setColorScale(e.target.value)
+						}}/>
+						Max
+					</label>
+				</div>
+
+				<div class="brightness-slider font-style">
+					<span class="title">Brightness</span>
+					<label>Min
+						<input id="slider-brightness" type="range" min="0" max="254" value={this.state.brightness} onChange={(e) => {
 							this.setBrightness(e.target.value)
 						}}/>
 						Max
 					</label>
 				</div>
-				<div className="control-section">
-					<span className="font-style">Functions</span>
-					<Button className='button' onClick={this.turnLightOff}>
+				<div class="control-section">
+					<span class="font-style">Functions</span>
+					<Button class='button' id="button-toggle-on-off" onClick={this.turnLightOff}>
 						Toggle On/Off
 					</Button>
-					<Button className='button' onClick={this.randomRotation}>
+					<Button class='button' id="button-random-color" onClick={this.randomRotation}>
 						Toggle Random
 					</Button>
-					<Button className='button' onClick={this.colorLoop}>
+					<Button class='button' id="button-colorloop" onClick={this.colorLoop}>
 						Toggle Color Scale
 					</Button>
-					<Button className='button' onClick={this.colorPulse}>
+					<Button class='button' id="button-color-pulse" onClick={this.colorPulse}>
 						Toggle Pulsing
 					</Button>
-					<Button className='button' onClick={() => {
+					<Button class='button' id="button-toggle-light-1" onClick={() => {
 						this.toggleLights(1)
 					}}>
 						Toggle Light 1 on/off
 					</Button>
-					<Button className='button' onClick={() => {
+					<Button class='button' id="button-toggle-light-2" onClick={() => {
 						this.toggleLights(2)
 					}}>
 						Toggle Light 2 on/off
 					</Button>
 				</div>
-				<div className="section-card">
-					<span className="font-style">Active Panel</span>
+				<div class="section-card">
+					<span class="font-style">Active Panel</span>
 					{this.renderStateButton()}
 				</div>
 				
-				<div className='section-card'>
-					<span className="title font-style">Choose Your Mood</span>
-					<Button className="ui button" color={"teal"}
+				<div class='section-card'>
+					<span class="title font-style">Choose Your Mood</span>
+					<Button class="ui button" id="button-mood-relaxed" color={"teal"}
 					        onClick={() => this.moodLighting("relaxed")}>Relaxed</Button>
-					<Button className="ui button" color={"purple"}
+					<Button class="ui button" id="button-mood-chilled" color={"purple"}
 					        onClick={() => this.moodLighting("chilled")}>Chilled</Button>
-					<Button className="ui button" color={"orange"}
+					<Button class="ui button" id="button-mood-excited" color={"orange"}
 					        onClick={() => this.moodLighting("excited")}>Excited</Button>
-					<Button className="ui button" color={"pink"}
+					<Button class="ui button" id="button-mood-crazy" color={"pink"}
 					        onClick={() => this.moodLighting("crazy")}>Crazy</Button>
 				</div>
 				
