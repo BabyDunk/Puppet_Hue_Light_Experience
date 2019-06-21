@@ -1,4 +1,22 @@
 module.exports = {
+  '@disabled': false,
+  props: {
+    colorList: Object.keys({
+      "red": 65495,
+      "orange": 3439,
+      "yellow": 18700,
+      "olive": 23222,
+      "green": 25653,
+      "teal": 37389,
+      "blue": 44896,
+      "violet": 46879,
+      "purple": 46879,
+      "pink": 57965,
+      "white": 34160
+    })
+  },
+
+
   'step one: click turn toggle on/off': function (browser) {
     browser
       .url('http://localhost:3000')
@@ -6,13 +24,13 @@ module.exports = {
       .click('button[id="button-toggle-on-off"]')
       .assert.containsText('button[id="button-currentState"]', 'OFF')
   },
-  
+
   'step two: count buttons ': function (browser) {
     browser
-      .expect.elements('button').count.to.equal(22)
+      .expect.elements('button').count.to.equal(23)
   },
-  
-  'step three: button text match ': function(browser){
+
+  'step three: button text match ': function (browser) {
     browser
       .waitForElementVisible('button[id="button-red"]', 2000)
       .assert.containsText('button[id="button-red"]', 'Turn Red')
@@ -23,27 +41,31 @@ module.exports = {
       .waitForElementVisible('button[id="button-green"]', 2000)
       .assert.containsText('button[id="button-green"]', 'Turn Green')
   },
-  
-  'step four: when color button clicked match active display ': function (browser){
+
+  'step four: when color button clicked match active display ': function (browser) {
+
     browser
-      .waitForElementVisible('button[id="button-red"]', 2000)
-      .click('button[id="button-red"]')
-      .assert.attributeContains('button[id="button-currentState"]', 'class', 'ui red button')
-      .waitForElementVisible('button[id="button-orange"]', 2000)
-      .click('button[id="button-orange"]')
-      .assert.attributeContains('button[id="button-currentState"]', 'class', 'ui orange button')
-      .waitForElementVisible('button[id="button-yellow"]', 2000)
-      .click('button[id="button-yellow"]')
-      .assert.attributeContains('button[id="button-currentState"]', 'class', 'ui yellow button')
-      .waitForElementVisible('button[id="button-green"]', 2000)
-      .click('button[id="button-green"]')
-      .assert.attributeContains('button[id="button-currentState"]', 'class', 'ui green button')
-      .waitForElementVisible('button[id="button-olive"]', 2000)
-      .click('button[id="button-olive"]')
-      .assert.attributeContains('button[id="button-currentState"]', 'class', 'ui olive button')
-      .waitForElementVisible('button[id="button-teal"]', 2000)
-      .click('button[id="button-teal"]')
-      .assert.attributeContains('button[id="button-currentState"]', 'class', 'ui teal button')
-      .end()
+      .waitForElementVisible('button[id="button-toggle-on-off"]', 2000)
+      .click('button[id="button-toggle-on-off"]')
+    .this.props.colorList.map((colorName) => {
+      waitForElementVisible(`button[id="button-${colorName}"]`, 2000)
+      .click(`button[id="button-${colorName}"]`)
+      .verify.attributeContains('button[id="button-currentState"]', 'class', `ui ${colorName} button`)
+  })
+
+
+},
+
+  'step five: check brightness strength notifier' : function(browser) {
+    browser
+      .waitForElementVisible('input[id="slider-brightness"]')
+      .setValue('input[id="slider-brightness"]', new Array(180).fill(browser.Keys.LEFT_ARROW))
+      .verify.containsText('button[id="button-currentState"]', 'Dim')
+      .waitForElementVisible('input[id="slider-brightness"]')
+      .setValue('input[id="slider-brightness"]', new Array(66).fill(browser.Keys.RIGHT_ARROW))
+      .verify.containsText('button[id="button-currentState"]', 'Mid')
+      .waitForElementVisible('input[id="slider-brightness"]')
+      .setValue('input[id="slider-brightness"]', new Array(80).fill(browser.Keys.RIGHT_ARROW))
+      .verify.containsText('button[id="button-currentState"]', 'Bright')
   }
 };
