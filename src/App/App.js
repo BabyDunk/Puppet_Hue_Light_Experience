@@ -360,7 +360,14 @@ class App extends Component {
 	
 	render() {
 		return (
+			
 			<div class='button_container'>
+				<h1 id="heading">Brighten Up Your Mood</h1>
+				
+				<div className="section-card">
+					<span className="font-style">Active Panel</span>
+					{this.renderStateButton()}
+				</div>
 				<Button class="ui button" id="button-red" color={"red"} onClick={() => this.setColor("red", "select")}>Turn
 					Red</Button>
 				<Button class="ui button" id="button-orange" color={"orange"} onClick={() => this.setColor("orange")}>Turn
@@ -380,11 +387,11 @@ class App extends Component {
 				
 				<div class="brightness-slider font-style">
 					<span class="title">Color Cycle</span>
-					<label>Min
+					<label>
 						<input id="slider-color-cycle" type="range" min="0" max="65495" value={this.state.color} onChange={(e) => {
 							this.setColorScale(e.target.value)
 						}}/>
-						Max
+						
 					</label>
 				</div>
 
@@ -421,10 +428,6 @@ class App extends Component {
 					}}>
 						Toggle Light 2 on/off
 					</Button>
-				</div>
-				<div class="section-card">
-					<span class="font-style">Active Panel</span>
-					{this.renderStateButton()}
 				</div>
 				
 				<div class='section-card'>
